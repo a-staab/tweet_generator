@@ -8,6 +8,7 @@ db = SQLAlchemy()
 # def __repr__(self):
 #    return "<User with user_id %s and email %s>" % (self.user_id, self.email)
 
+#class Tweets(db.Model):
 
 def connect_to_db(app, db_uri='postgresql:///tweet_lib'):
     """Connect to the database."""

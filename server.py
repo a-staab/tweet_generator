@@ -1,23 +1,30 @@
-import sys
 import os
 import twitter
 from random import choice
 
-chains = sys.argv[1]
+# Create an instance of the twitter.Api class and authenticate with consumer key
+# and secret and oAuth key and secret.
 api = twitter.Api(consumer_key=os.environ['TWITTER_CONSUMER_KEY'],
                   consumer_secret=os.environ['TWITTER_CONSUMER_SECRET'],
                   access_token_key=os.environ['TWITTER_ACCESS_TOKEN_KEY'],
                   access_token_secret=os.environ['TWITTER_ACCESS_TOKEN_SECRET'])
 
+user = "BarackObama"
 
-def open_and_read_file(file_path):
-    """Takes file path as string; returns text as string. Takes a string that is
-    a file path, opens the file, and turns the file's contents as one string of
-    text.
-    """
+# Create a list of user's statuses from newest to oldest, excluding replies.
+# 200 is the maximum allowed by the python-twitter library.
+timeline = api.GetUserTimeline(screen_name=user,
+                               exclude_replies=True,
+                               count=200)
 
-    contents = open(file_path).read()
-    return contents
+# Extract Tweet strings from statuses to create new list without metadata.
+tweet_strings = [status.text for status in timeline]
+
+# Concatenate strings into a single string.
+i = 0
+markov_base = ""
+for i in range(len(tweet_strings)):
+    markov_base = markov_base + tweet_strings[i]
 
 
 def make_chains(text_string):
@@ -74,6 +81,5 @@ def make_text(chains):
 
     return text
 
-all_text = open_and_read_file(chains)
-markov_chains = make_chains(all_text)
+markov_chains = make_chains(markov_base)
 print make_text(markov_chains)

@@ -2,13 +2,28 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
-# class User(db.Model):
-# """ """
-# __tablename__ = "users"
-# def __repr__(self):
-#    return "<User with user_id %s and email %s>" % (self.user_id, self.email)
+class TwitterUser(db.Model):
+"""Twitter user. A TwitterUser has (potentially) many MarkovTweets."""
 
-#class Tweets(db.Model):
+__tablename__ = "users"
+
+screenname = db.Column(db.Unicode(100), nullable=False, primary_key=True)
+created_at = db.Column(db.DateTime, nullable=False)
+
+# def __repr__(self):
+#     return "<User with user_id %s and email %s>" % (self.user_id, self.email)
+
+class MarkovTweet(db.Model):
+"""Tweet generated from Markov chains. A MarkovTweet has one TwitterUser."""
+
+__tablename__ = "markov_tweets"
+
+tweet_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+created_at = db.Column(db.DateTime, nullable=False)
+
+
+
 
 def connect_to_db(app, db_uri='postgresql:///tweet_lib'):
     """Connect to the database."""

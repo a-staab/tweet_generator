@@ -1,13 +1,37 @@
 <html>
 <head>
     <title>Tweet Gen 2.0</title>
+    <script src="http://code.jquery.com/jquery-3.2.1.js"></script>
 </head>
 <body>
     <h1>Tweets on Demand</h1>
-    <form action="/tweet_gen" method="POST">
+    <form action="/tweet_gen" id="tweet-gen-form">
         <label for="twitter-username">Enter Twitter username: </label>
         <input type="text" name="twitter-username" id="twitter-username"> 
-        <input type="submit" value="Make a Tweet">
+        <input type="submit" value="Make a Tweet">   
     </form>
+    <span id= "markov-tweet"></span>
+    <script>
+        // function showMarkovTweet(result) {
+        //     $('#markov-tweet').text('{{ text }}');
+        //       alert(result);
+        // }
+
+        // function makeTweet(evt) {
+        //     evt.preventDefault();
+        //     var formData = {
+        //         "username" = $("#twitter-username").val()    
+        //     };
+            
+        //     $.get("/tweet_gen", 
+        //         formData, 
+        //         showMarkovTweet
+        //         );
+        // }
+
+        // $("#tweet-gen-form").on("submit", makeTweet);
+    </script>
 </body>
 </html>
+
+

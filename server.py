@@ -14,15 +14,6 @@ cache = Cache(app, config={
               'CACHE_REDIS_URL': 'redis://localhost:6379',
               'CACHE_DEFAULT_TIMEOUT': '50'
               })
-# CONFIG = {
-#             'CACHE_TYPE': 'redis',
-#             'CACHE_KEY_PREFIX': 'flask-cache',
-#             'CACHE_REDIS_HOST': 'localhost',
-#             'CACHE_REDIS_PORT': '6379',
-#             'CACHE_REDIS_URL': 'redis://localhost:6379',
-#             'CACHE_DEFAULT_TIMEOUT': '50'
-# }
-# cache = Cache(app, config=CONFIG)
 
 # Create an instance of the twitter.Api class and authenticate with consumer key
 # and secret and oAuth key and secret.
@@ -41,7 +32,7 @@ def load_page():
 
 @app.route("/tweet_gen", methods=["GET"])
 def get_markov_tweet():
-    """ """
+    # TODO: Write docstring: """ """
 
     twitter_user = request.args.get("twitter-username")
 
@@ -60,6 +51,7 @@ def get_markov_tweet():
     for index in range(len(tweet_strings)):
         markov_base = markov_base + tweet_strings[index]
 
+    @cache.cached()
     def make_chains(text_string):
         """Takes input text as a string; returns a dictionary of Markov chains.
         The key will be a tuple comprising two words that appear consecutively
@@ -89,7 +81,6 @@ def get_markov_tweet():
 
         return chains
 
-    @cache.cached()
     def make_tweet(chains):
         """Takes a dictionary of Markov chains; returns a string with a maximum
         of 140 characters that reflects the probabilities captured by the

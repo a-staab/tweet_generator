@@ -19,6 +19,7 @@ Tweet Gen 2.0 is a web app designed to generate Tweets simulating the voice of a
 To run Tweet Gen 2.0 locally, you'll need to install [Redis](https://redis.io/) if you haven't already. You'll also need a [Twitter](https://twitter.com/) account (with an associated phone number) in order to get the Twitter credentials you'll need to provide.
 
 You can install the dependencies using pip install:
+
 ```
 $ pip install -r requirements.txt
 ```

@@ -33,7 +33,9 @@ def load_page():
 
 @app.route("/tweet_gen", methods=["GET"])
 def get_markov_tweet():
-    # TODO: Write docstring: """ """
+    """Gets a Twitter user's screen name from the request object and returns the
+    result of make_tweet(), which is a string with a maximum of 140 characters.
+    """
 
     twitter_user = request.args.get("twitter-username")
 
@@ -59,10 +61,13 @@ def get_markov_tweet():
         in the input text (first_word, second_word), and its value is a list of
         the word(s) that follow the pair (aka the bi_gram) whenever it appears
         in the input text. For example:
-            >>> make_chains("hi there mary hi there juanita")
-            {('hi', 'there'): ['mary', 'juanita'],
-             ('there', 'mary'): ['hi'],
-             ('mary', 'hi'): ['there']}
+            >>> make_chains("this is an example; this is also a doctest")
+            {('also', 'a'): ['doctest'],
+             ('an', 'example;'): ['this'],
+             ('example;', 'this'): ['is'],
+             ('is', 'also'): ['a'],
+             ('is', 'an'): ['example;'],
+             ('this', 'is'): ['an', 'also']}
         """
 
         chains = {}
@@ -132,5 +137,5 @@ def get_markov_tweet():
 
 
 if __name__ == "__main__":
-    app.debug = True
+    app.debug = False
     app.run(host="0.0.0.0")

@@ -4,6 +4,7 @@ from random import choice
 from flask import Flask, render_template, request
 from flask_cache import Cache
 
+
 # Create Flask app
 app = Flask(__name__)
 cache = Cache(app, config={

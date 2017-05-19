@@ -2,9 +2,27 @@ import os
 import twitter
 from random import choice
 from flask import Flask, render_template, request
+from flask_cache import Cache
 
 # Create Flask app
 app = Flask(__name__)
+cache = Cache(app, config={
+              'CACHE_TYPE': 'redis',
+              'CACHE_KEY_PREFIX': 'flask-cache',
+              'CACHE_REDIS_HOST': 'localhost',
+              'CACHE_REDIS_PORT': '6379',
+              'CACHE_REDIS_URL': 'redis://localhost:6379',
+              'CACHE_DEFAULT_TIMEOUT': '50'
+              })
+# CONFIG = {
+#             'CACHE_TYPE': 'redis',
+#             'CACHE_KEY_PREFIX': 'flask-cache',
+#             'CACHE_REDIS_HOST': 'localhost',
+#             'CACHE_REDIS_PORT': '6379',
+#             'CACHE_REDIS_URL': 'redis://localhost:6379',
+#             'CACHE_DEFAULT_TIMEOUT': '50'
+# }
+# cache = Cache(app, config=CONFIG)
 
 # Create an instance of the twitter.Api class and authenticate with consumer key
 # and secret and oAuth key and secret.
@@ -43,15 +61,15 @@ def get_markov_tweet():
         markov_base = markov_base + tweet_strings[index]
 
     def make_chains(text_string):
-        """Takes input text as a string; returns a dictionary of Markov chains. The
-        key will be a tuple comprising two words that appear consecutively in the
-        input text (first_word, second_word), and its value is a list of the word(s)
-        that follow the pair (aka the bi_gram) whenever it appears in the input
-        text. For example:
+        """Takes input text as a string; returns a dictionary of Markov chains.
+        The key will be a tuple comprising two words that appear consecutively
+        in the input text (first_word, second_word), and its value is a list of
+        the word(s) that follow the pair (aka the bi_gram) whenever it appears
+        in the input text. For example:
             >>> make_chains("hi there mary hi there juanita")
             {('hi', 'there'): ['mary', 'juanita'],
              ('there', 'mary'): ['hi'],
-             ('mary', 'hi': ['there']}
+             ('mary', 'hi'): ['there']}
         """
 
         chains = {}
@@ -70,11 +88,13 @@ def get_markov_tweet():
                 third_words.append(words[counter + 2])
 
         return chains
-        print chains
 
+    @cache.cached()
     def make_tweet(chains):
-        """Takes a dictionary of Markov chains; returns a string with a maximum of
-        140 characters that reflects the probabilities captured by the chains."""
+        """Takes a dictionary of Markov chains; returns a string with a maximum
+        of 140 characters that reflects the probabilities captured by the
+        chains."""
+
         # Choose a bi-gram from chains dictionary randomly
         bi_gram = choice(chains.keys())
         # Choose a word randomly from that bi-gram's value (which is a list) in the
@@ -100,8 +120,8 @@ def get_markov_tweet():
 
         text_words = text.split(" ")
 
-        # Make a reasonable attempt to prevent 140-character cut-off from causing
-        # the string to end in the middle of a word
+        # Make a reasonable attempt to prevent 140-character cut-off from
+        # causing the string to end in the middle of a word
         if (" " + text_words[-1] + " ") not in markov_base:
             shortened_text = text_words[0:-1]
             text = ""
@@ -117,6 +137,7 @@ def get_markov_tweet():
 
     markov_chains = make_chains(markov_base)
     return make_tweet(markov_chains)
+
 
 if __name__ == "__main__":
     app.debug = True

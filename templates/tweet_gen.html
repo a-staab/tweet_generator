@@ -10,27 +10,25 @@
         <input type="text" name="twitter-username" id="twitter-username"> 
         <input type="submit" value="Make a Tweet">   
     </form>
-    <span id= "markov-tweet"></span>
     <script>
-        // function showMarkovTweet(result) {
-        //     $('#markov-tweet').text('{{ text }}');
-        //       alert(result);
-        // }
+        function showMarkovTweet(result) {
+            $('#markov-tweet').html(result);
+        };
 
-        // function makeTweet(evt) {
-        //     evt.preventDefault();
-        //     var formData = {
-        //         "username" = $("#twitter-username").val()    
-        //     };
+        function makeTweet(evt) {
+            evt.preventDefault();
+            var formData = {
+                "twitter-username": $("#twitter-username").val()    
+            };
             
-        //     $.get("/tweet_gen", 
-        //         formData, 
-        //         showMarkovTweet
-        //         );
-        // }
-
-        // $("#tweet-gen-form").on("submit", makeTweet);
+            $.get("/tweet_gen", 
+                formData,
+                showMarkovTweet
+                );
+        }
+        $("#tweet-gen-form").on("submit", makeTweet);
     </script>
+    <div id= "markov-tweet">Hi I'm text in a div!</div>
 </body>
 </html>
 

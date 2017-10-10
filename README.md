@@ -18,14 +18,33 @@ Tweet Gen 2.0 is a web app designed to generate Tweets simulating the voice of a
 
 To run Tweet Gen 2.0 locally, you'll need to install [Redis](https://redis.io/) if you haven't already. You'll also need a [Twitter](https://twitter.com/) account (with an associated phone number) in order to get the Twitter credentials you'll need to provide.
 
-You can install the dependencies using pip install:
+First, visit https://apps.twitter.com and create a new application to obtain your Twitter consumer key and secret and your access token and access token secret. Save them in a secrets.sh file in the format shown below:
+```
+export TWITTER_CONSUMER_KEY="XXXXXXXXXXXXXXXXXXXXX"
+export TWITTER_CONSUMER_SECRET="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+export TWITTER_ACCESS_TOKEN_KEY="XXXXXXXXXXXXXXXXXXXXXX"
+export TWITTER_ACCESS_TOKEN_SECRET="XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+```
+
+Then, create and activate a virtual environment:
+```
+virtualenv env
+```
+```
+source env/bin/activate
+```
+Then you can install the dependencies using pip install:
 
 ```
-$ pip install -r requirements.txt
+pip install -r requirements.txt
 ```
-
-Then, you'll need to visit https://apps.twitter.com and create a new application to obtain your consumer key and secret and your access token and access token secret. Save them in your own secrets.sh file and source them to your environment.
-
+Finally, source your secrets.sh file and run the server file.
+```
+source secrets.sh
+```
+```
+python server.py
+```
 #### TODO
 
 * Polish UI

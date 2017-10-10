@@ -102,7 +102,7 @@ def get_markov_tweet():
         text = bi_gram[0] + " " + bi_gram[1] + " " + third_word
         # Loop through dictionary, continuously concatenating string until creating
         # a bi_gram not in the dictionary
-        while chains.get((bi_gram[1], third_word), 0) != 0:
+        while chains.get((bi_gram[1], third_word), 0) != 0 and len(text) <= 140:
             # Create new bi_gram from 2nd word in previous one and previous third
             # word
             bi_gram = (bi_gram[1], third_word)
@@ -112,23 +112,10 @@ def get_markov_tweet():
             # Add new third word to stored text
             text = text + " " + third_word
 
-        if len(text) >= 140:
-            text = text[:140]
-
-        text_words = text.split(" ")
-
-        # Make a reasonable attempt to prevent 140-character cut-off from
-        # causing the string to end in the middle of a word
-        if (" " + text_words[-1] + " ") not in markov_base:
-            shortened_text = text_words[0:-1]
-            text = ""
-            for word in shortened_text:
-                text = text + " " + word
-
         # Optionally: Uncomment below to always capitalize first word if first
         # character is a letter
-        # if text[0].isalpha():
-        #    text = text.capitalize()
+        if text[0].isalpha():
+            text = text.capitalize()
 
         return text
 

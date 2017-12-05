@@ -8,12 +8,10 @@ Jinja2==2.9.6
 MarkupSafe==1.0
 oauthlib==2.0.2
 packaging==16.8
-pkg-resources==0.0.0
 pyparsing==2.2.0
 python-twitter==3.2.1
 redis==2.10.5
 requests==2.14.2
 requests-oauthlib==0.8.0
 six==1.10.0
-twitter==1.17.1
 Werkzeug==0.12.2

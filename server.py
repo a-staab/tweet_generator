@@ -33,8 +33,27 @@ def load_page():
 
 @app.route("/tweet_gen", methods=["GET"])
 def get_markov_tweet():
-    """Gets a Twitter user's screen name from the request object and returns the
-    result of make_tweet(), which is a string with a maximum of 140 characters.
+    """
+    Route for AJAX call to produce tweet.
+    """
+
+    markov_chains = get_or_set_chains()
+    return make_tweet(markov_chains)
+
+
+@cache.cached()
+def get_or_set_chains():
+    """
+    Get 200 tweets and return corresponding dictionary of Markov chains.
+    """
+
+    return make_chains(get_tweets())
+
+
+def get_tweets():
+    """Gets a Twitter user's screen name from the request object and sends a
+    request to the Python-Twitter API; returns the latest 200 tweets by the user
+    in a single string.
     """
 
     twitter_user = request.args.get("twitter-username")
@@ -54,73 +73,73 @@ def get_markov_tweet():
     for index in range(len(tweet_strings)):
         markov_base = markov_base + tweet_strings[index]
 
-    @cache.cached()
-    def make_chains(text_string):
-        """Takes input text as a string; returns a dictionary of Markov chains.
-        The key will be a tuple comprising two words that appear consecutively
-        in the input text (first_word, second_word), and its value is a list of
-        the word(s) that follow the pair (aka the bi_gram) whenever it appears
-        in the input text. For example:
-            >>> make_chains("this is an example; this is also a doctest")
-            {('also', 'a'): ['doctest'],
-             ('an', 'example;'): ['this'],
-             ('example;', 'this'): ['is'],
-             ('is', 'also'): ['a'],
-             ('is', 'an'): ['example;'],
-             ('this', 'is'): ['an', 'also']}
-        """
+    return markov_base
 
-        chains = {}
-        words = text_string.split()
-        for counter in range(len(words)-2):
-            first_word = words[counter]
-            second_word = words[counter + 1]
-            bi_gram = (first_word, second_word)
-            # Check if this bi_gram has already been added as a key
-            third_words = chains.get(bi_gram, [])
-            # If not, add new key-value pair of bi_gram and consecutive word
-            if third_words == []:
-                chains[bi_gram] = [words[counter + 2]]
-            # If so, append consecutive word to value list
-            else:
-                third_words.append(words[counter + 2])
 
-        return chains
+def make_chains(text_string):
+    """Takes input text as a string; returns a dictionary of Markov chains.
+    The key will be a tuple comprising two words that appear consecutively
+    in the input text (first_word, second_word), and its value is a list of
+    the word(s) that follow the pair (aka the bi_gram) whenever it appears
+    in the input text. For example:
+        >>> make_chains("this is an example; this is also a doctest")
+        {('also', 'a'): ['doctest'],
+         ('an', 'example;'): ['this'],
+         ('example;', 'this'): ['is'],
+         ('is', 'also'): ['a'],
+         ('is', 'an'): ['example;'],
+         ('this', 'is'): ['an', 'also']}
+    """
 
-    def make_tweet(chains):
-        """Takes a dictionary of Markov chains; returns a string with a maximum
-        of 140 characters that reflects the probabilities captured by the
-        chains."""
+    chains = {}
+    words = text_string.split()
+    for counter in range(len(words)-2):
+        first_word = words[counter]
+        second_word = words[counter + 1]
+        bi_gram = (first_word, second_word)
+        # Check if this bi_gram has already been added as a key
+        third_words = chains.get(bi_gram, [])
+        # If not, add new key-value pair of bi_gram and consecutive word
+        if third_words == []:
+            chains[bi_gram] = [words[counter + 2]]
+        # If so, append consecutive word to value list
+        else:
+            third_words.append(words[counter + 2])
 
-        # Choose a bi-gram from chains dictionary randomly
-        bi_gram = choice(chains.keys())
-        # Choose a word randomly from that bi-gram's value (which is a list) in the
+    return chains
+
+
+def make_tweet(chains):
+    """Takes a dictionary of Markov chains; returns a string with a maximum
+    of 140 characters that reflects the probabilities captured by the
+    chains."""
+
+    # Choose a bi-gram from chains dictionary randomly
+    bi_gram = choice(chains.keys())
+    # Choose a word randomly from that bi-gram's value (which is a list) in the
+    # chains dictionary
+    third_word = choice(chains[bi_gram])
+    # Store the first and second words in the bi-gram and the third word chosen
+    # from its associated list as the beginning of the new string to be returned
+    text = bi_gram[0] + " " + bi_gram[1] + " " + third_word
+    # Loop through dictionary, continuously concatenating string until creating
+    # a bi_gram not in the dictionary
+    while chains.get((bi_gram[1], third_word), 0) != 0 and len(text) <= 140:
+        # Create new bi_gram from 2nd word in previous one and previous third
+        # word
+        bi_gram = (bi_gram[1], third_word)
+        # Choose new third word randomly from value list for the bi_gram in the
         # chains dictionary
         third_word = choice(chains[bi_gram])
-        # Store the first and second words in the bi-gram and the third word chosen
-        # from its associated list as the beginning of the new string to be returned
-        text = bi_gram[0] + " " + bi_gram[1] + " " + third_word
-        # Loop through dictionary, continuously concatenating string until creating
-        # a bi_gram not in the dictionary
-        while chains.get((bi_gram[1], third_word), 0) != 0 and len(text) <= 140:
-            # Create new bi_gram from 2nd word in previous one and previous third
-            # word
-            bi_gram = (bi_gram[1], third_word)
-            # Choose new third word randomly from value list for the bi_gram in the
-            # chains dictionary
-            third_word = choice(chains[bi_gram])
-            # Add new third word to stored text
-            text = text + " " + third_word
+        # Add new third word to stored text
+        text = text + " " + third_word
 
-        # Optionally: Uncomment below to always capitalize first word if first
-        # character is a letter
-        if text[0].isalpha():
-            text = text.capitalize()
+    # Optionally: Uncomment below to always capitalize first word if first
+    # character is a letter
+    if text[0].isalpha():
+        text = text.capitalize()
 
-        return text
-
-    markov_chains = make_chains(markov_base)
-    return make_tweet(markov_chains)
+    return text
 
 
 if __name__ == "__main__":

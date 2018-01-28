@@ -12,7 +12,7 @@ cache = Cache(app, config={
               'CACHE_KEY_PREFIX': 'flask-cache',
               'CACHE_REDIS_HOST': 'localhost',
               'CACHE_REDIS_PORT': '6379',
-              'CACHE_REDIS_URL': 'redis://localhost:6379',
+              'CACHE_REDIS_URL': 'redis://h:p46046daa9558add78be2de4eafb6a5e2baec9ace614ee7e1aed4fb83c4883920@ec2-34-205-95-200.compute-1.amazonaws.com:54339',
               'CACHE_DEFAULT_TIMEOUT': '1000'
               })
 

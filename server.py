@@ -7,14 +7,16 @@ from flask_cache import Cache
 
 # Create Flask app
 app = Flask(__name__)
-cache = Cache(app, config={
-              'CACHE_TYPE': 'redis',
-              'CACHE_KEY_PREFIX': 'flask-cache',
-              'CACHE_REDIS_HOST': 'localhost',
-              'CACHE_REDIS_PORT': '6379',
-              'CACHE_REDIS_URL': 'redis://localhost:6379',
-              'CACHE_DEFAULT_TIMEOUT': '1000'
-              })
+
+# Disabling cache for Heroku deploy
+# cache = Cache(app, config={
+#               'CACHE_TYPE': 'redis',
+#               'CACHE_KEY_PREFIX': 'flask-cache',
+#               'CACHE_REDIS_HOST': 'localhost',
+#               'CACHE_REDIS_PORT': '6379',
+#               'CACHE_REDIS_URL': 'redis://localhost:6379',
+#               'CACHE_DEFAULT_TIMEOUT': '1000'
+#               })
 
 # Create an instance of the twitter.Api class and authenticate with consumer key
 # and secret and oAuth key and secret.

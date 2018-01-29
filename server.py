@@ -94,7 +94,12 @@ def make_chains(text_string):
 
     chains = {}
     words = text_string.split()
-    for counter in range(len(words)-2):
+
+    for word in words:
+        if word.startswith("http"):
+            word += " "
+
+    for counter in range(len(words) - 2):
         first_word = words[counter]
         second_word = words[counter + 1]
         bi_gram = (first_word, second_word)

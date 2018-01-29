@@ -95,9 +95,11 @@ def make_chains(text_string):
     chains = {}
     words = text_string.split()
 
-    for word in words:
+    for i in range(len(words)):
+        word = words[i]
         if word.startswith("http"):
-            word += " "
+            words.insert((i + 1), word[23:])
+            words[i] = word[:23]
 
     for counter in range(len(words) - 2):
         first_word = words[counter]

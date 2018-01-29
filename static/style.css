@@ -2,19 +2,37 @@
 
 body {
     text-align: center;
+    color: white;
+    font-size: 1.1em;
+    font-weight: bold;
 }
 
-
-h1 {
-    font-family: Helvetica Neue, Helvetica, Liberation Sans, Arial, sans-serif;
+.titlecase {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
     font-weight: bold;
     color: white;
+    font-size: 4em;
 }
 
 .jumbotron {
-    background-color: #1dcaff;
+    background-color: #1DA1F2;
     margin-top: 5%;
     margin-bottom: 50%;
     padding-top: 10%;
     padding-bottom: 10%
+}
+
+.btn {
+    border-color: white;
+    border-radius: 30px;
+    color: white;
+    background-color: #1DA1F2;
+    margin: 15px;
+    font-size: .7em;
+    font-weight: bold;
+}
+
+input[type="text"] {
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    font-weight: bold;
 }

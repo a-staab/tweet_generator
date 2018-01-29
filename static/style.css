@@ -19,7 +19,8 @@ body {
     margin-top: 5%;
     margin-bottom: 50%;
     padding-top: 10%;
-    padding-bottom: 10%
+    padding-bottom: 10%;
+    border-radius: 25px;
 }
 
 .btn {
@@ -35,4 +36,14 @@ body {
 input[type="text"] {
     font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
     font-weight: bold;
+}
+
+label {
+    padding-right: 10px;
+}
+
+.tweet {
+    margin-top: 1.5em;
+    margin-right: 5em;
+    margin-left: 5em;
 }
